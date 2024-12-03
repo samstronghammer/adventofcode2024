@@ -1,0 +1,12 @@
+{
+  "name": "adventofcode2024",
+  "version": "1.0.0",
+  "description": "Advent of Code 2024 solutions",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "samstronghammer",
+  "license": "MIT"
+}

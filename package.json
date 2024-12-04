@@ -8,5 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "samstronghammer",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "shallow-equal": "^3.1.0"
+  }
 }

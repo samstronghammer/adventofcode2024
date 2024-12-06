@@ -37,6 +37,16 @@ export class Point2D {
   diag4 = () => {
     return DIAG_4.map(adj => this.add(adj))
   }
+
+  equals = (other) => {
+    if (!(other instanceof Point2D)) throw new Error(`Not instance of Point2D: ${other}`)
+    return this.r === other.r && this.c === other.c
+  }
+
+  turnRight = () => {
+    return new Point2D(this.c, -this.r)
+  }
+
 }
 
 export const RIGHT = new Point2D(0, 1)

@@ -4,7 +4,7 @@ import { Point2D } from "./Point2D.js";
 
 export class InputUtils {
   static toStringArray = (directory) => {
-    return fs.readFileSync(`${directory}/in2.txt`, "utf-8").trim().split("\n");
+    return fs.readFileSync(`${directory}/in.txt`, "utf-8").trim().split("\n");
   }
 
   static toIntArrays = (directory) => {

@@ -47,6 +47,10 @@ export class Point2D {
     return new Point2D(this.c, -this.r)
   }
 
+  turnLeft = () => {
+    return new Point2D(-this.c, this.r)
+  }
+
 }
 
 export const RIGHT = new Point2D(0, 1)

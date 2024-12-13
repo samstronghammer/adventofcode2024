@@ -8,10 +8,8 @@ const __dirname = path.dirname(__filename);
 
 const input = InputUtils.toIntArrays(__dirname).map(arr => arr.map(n => fraction(n)))
 
-const calcCost = (machine) => {
-  const result = lusolve([[machine.A[0], machine.B[0]], [machine.A[1], machine.B[1]]], machine.prize)
-  const aPushes = result[0][0]
-  const bPushes = result[1][0]
+const calcCost = (lh, prize) => {
+  const [[aPushes], [bPushes]] = lusolve(lh, prize)
   if (aPushes.d === 1n && bPushes.d === 1n) return aPushes.n * 3n + bPushes.n
   return 0n
 }
@@ -19,14 +17,10 @@ const calcCost = (machine) => {
 let p1 = 0n
 let p2 = 0n
 for (let i = 0; i < input.length; i += 4) {
-  const machine = {
-    A: input[i],
-    B: input[i + 1],
-    prize: input[i + 2]
-  } 
-  p1 += calcCost(machine)
-  machine.prize = machine.prize.map(n => n.add(10000000000000))
-  p2 += calcCost(machine)
+  const lh = [[input[i][0], input[i + 1][0]], [input[i][1], input[i + 1][1]]]
+  const prize = input[i + 2]
+  p1 += calcCost(lh, prize)
+  p2 += calcCost(lh, prize.map(n => n.add(10000000000000)))
 }
 console.log(p1.toString())
 console.log(p2.toString())

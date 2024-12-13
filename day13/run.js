@@ -12,9 +12,7 @@ const calcCost = (machine) => {
   const result = lusolve([[machine.A[0], machine.B[0]], [machine.A[1], machine.B[1]]], machine.prize)
   const aPushes = result[0][0]
   const bPushes = result[1][0]
-  if (aPushes.d === 1n && bPushes.d === 1n) {
-    return aPushes.n * 3n + bPushes.n
-  }
+  if (aPushes.d === 1n && bPushes.d === 1n) return aPushes.n * 3n + bPushes.n
   return 0n
 }
 

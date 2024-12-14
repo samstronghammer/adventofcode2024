@@ -9,7 +9,7 @@ export class InputUtils {
 
   static toIntArrays = (directory) => {
     return this.toStringArray(directory).map(line => {
-      return [...line.matchAll(/\d+/g)].map(match => parseInt(match[0]))
+      return [...line.matchAll(/-?\d+/g)].map(match => parseInt(match[0]))
     })
   }
 
@@ -19,5 +19,21 @@ export class InputUtils {
         return [new Point2D(row, col).toString(), char]
       })
     }))
+  }
+
+  static printPoint2DMap = (map) => {
+    const lines = process.stdout.getWindowSize()[1];
+    for (let i = 0; i < lines; i++) {
+      console.log('\r\n');
+    }
+    let maxRow = 0
+    const entries = [...map.entries()]
+    entries.forEach(([key, value]) => {
+      const point = Point2D.fromString(key)
+      process.stdout.cursorTo(point.c, point.r)
+      process.stdout.write(value)
+      maxRow = Math.max(maxRow, point.r)
+    })
+    process.stdout.cursorTo(0, maxRow + 1)
   }
 }

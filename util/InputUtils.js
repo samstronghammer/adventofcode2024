@@ -14,7 +14,11 @@ export class InputUtils {
   }
 
   static toPoint2DMap = (directory) => {
-    return new Map(this.toStringArray(directory).flatMap((line, row) => {
+    return this.arrayToPoint2DMap(this.toStringArray(directory))
+  }
+
+  static arrayToPoint2DMap = (array) => {
+    return new Map(array.flatMap((line, row) => {
       return line.split("").map((char, col) => {
         return [new Point2D(row, col).toString(), char]
       })

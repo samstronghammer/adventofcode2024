@@ -10,6 +10,7 @@
   "author": "samstronghammer",
   "license": "MIT",
   "dependencies": {
+    "graphlib": "^2.1.8",
     "mathjs": "^14.0.1",
     "shallow-equal": "^3.1.0"
   }

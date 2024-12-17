@@ -13,6 +13,12 @@ export class InputUtils {
     })
   }
 
+  static toBigIntArrays = (directory) => {
+    return this.toStringArray(directory).map(line => {
+      return [...line.matchAll(/-?\d+/g)].map(match => BigInt(match[0]))
+    })
+  }
+
   static toPoint2DMap = (directory) => {
     return this.arrayToPoint2DMap(this.toStringArray(directory))
   }

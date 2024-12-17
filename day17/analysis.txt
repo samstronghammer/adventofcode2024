@@ -1,0 +1,16 @@
+Register A: 33940147
+Register B: 0
+Register C: 0
+
+
+at least 2 ^ 45 (8 ^ 15) to yield 16 digits.
+
+Program: 
+2,4,  A mod 8 -> B
+1,5,  B ^ 5 -> B
+7,5,  A / 2 ^ B -> C 
+1,6,  B ^ 6 -> B
+4,2,  B ^ C -> B
+5,5,  B % 8 -> OUTPUT
+0,3,  A / 2 ^ 3 -> A
+3,0   Jump to beginning if A !== 0

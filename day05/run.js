@@ -2,6 +2,7 @@
 import path from 'path';
 import { InputUtils } from "../util/InputUtils.js"
 import { fileURLToPath } from 'url';
+import { MathUtils } from '../util/MathUtils.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -27,8 +28,7 @@ const incorrectUpdates = updates.filter(update => {
   return rule[0] === n1 ? -1 : 1
 }))
 
-const getResult = (someUpdates) => someUpdates.map(update => update[(update.length - 1) / 2])
-  .reduce((acc, num) => acc + num, 0)
+const getResult = (someUpdates) => MathUtils.sumArray(someUpdates.map(update => update[(update.length - 1) / 2]))
 
 console.log(getResult(correctUpdates))
 console.log(getResult(incorrectUpdates))

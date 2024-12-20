@@ -26,6 +26,11 @@ export class Point2D {
     return new Point2D(this.r - other.r, this.c - other.c)
   }
 
+  manhattan = (other) => {
+    const delta = this.sub(other)
+    return Math.abs(delta.r) + Math.abs(delta.c)
+  }
+
   adj4 = () => {
     return ADJ_4.map(adj => this.add(adj))
   }

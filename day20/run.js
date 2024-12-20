@@ -15,99 +15,52 @@ const endPointString = [...input.entries()].find(([_, value]) => value === "E")[
 input.set(startPointString, ".")
 input.set(endPointString, ".")
 
-const locationToKey = (location, cheat) => {
-  return `${location.toString()}|${cheat}`
-}
-
-const makeGraph = (forward) => {
+const makeGraph = () => {
   const graph = new Graph();
   [...input.entries()].forEach(([pointString, char]) => {
-    const isWall = char !== "."
+    if (char !== ".") return
     const point = Point2D.fromString(pointString)
-    const fromLocations = []
-    if (isWall) {
-      fromLocations.push([point, 1])
-    } else {
-      fromLocations.push([point, 0])
-      fromLocations.push([point, 2])
-    }
-    fromLocations.forEach(location => graph.setNode(locationToKey(...location)))
-
+    graph.setNode(pointString)
     ADJ_4.forEach(adj => {
-      const calcNext = ([fromPoint, cheat]) => {
-        const nextPoint = forward ? fromPoint.add(adj) : fromPoint.sub(adj)
+      const calcNext = () => {
+        const nextPoint = point.add(adj)
         const adjChar = input.get(nextPoint.toString())
-        if (adjChar === undefined) return undefined
-        if (adjChar === "#") {
-          // # -> #
-          if (isWall) return undefined
-          // . -> #
-          if (forward) {
-            if (cheat !== 0) return undefined
-            return locationToKey(nextPoint, 1)
-          }
-          if (cheat !== 2) return undefined
-          return locationToKey(nextPoint, 1)
-        }
+        if (adjChar === "#") return undefined
         if (adjChar !== ".") throw new Error(`Unexpected char: ${adjChar}`)
-        if (isWall) {
-          // # -> .
-          return locationToKey(nextPoint, forward ? 2 : 0)
-        } else {
-          // . -> .
-          return locationToKey(nextPoint, cheat)
-        }
+        return nextPoint.toString()
       }
-      fromLocations.forEach(location => {
-        const next = calcNext(location)
-        if (next) graph.setEdge(locationToKey(...location), next)
-      })
+      const next = calcNext()
+      if (next) graph.setEdge(pointString, next)
     })
   });
   return graph
 }
 
-// TODO strip out cheat, don't need it for points.
-// loc, 0 -- haven't used cheat yet. Can travel to 1s in walls.
-// loc, 1 -- used cheat, currently in wall. Can only travel to 2s not in walls.
-// loc, 2 -- used cheat, out of wall. Can only travel to 2s not in walls.
-// Cheating collision for 2 picoseconds allows passing through ONE WALL
+const graph = makeGraph()
 
-const graph = makeGraph(true)
-const backwardGraph = makeGraph(false)
+const calcDistances = (start, graph) => alg.dijkstra(graph, start)
 
-const startPointKey = locationToKey(Point2D.fromString(startPointString), 0)
-const endPointKeyNoCheats = locationToKey(Point2D.fromString(endPointString), 0)
-
-const calcDistances = (start, graph) => {
-  return alg.dijkstra(graph, start)
-}
-
-const forwardDistances = calcDistances(startPointKey, graph)
-const backwardDistancesNoCheats = calcDistances(endPointKeyNoCheats, backwardGraph)
-
-const shortestNoCheating = forwardDistances[endPointKeyNoCheats].distance;
+const forwardDistances = calcDistances(startPointString, graph)
+const backwardDistances = calcDistances(endPointString, graph)
+const shortestDistance = forwardDistances[endPointString].distance;
 
 const countSavings = (cheatDistance) => {
   let count = 0;
-  // TODO remove all "#" items, and instead iterate over everything within a manhattan distance of cheatDistance. Will be WAY less iterations. 
   [...input.entries()].forEach(([fromPointString, fromChar]) => {
     if (fromChar !== ".") return
-    [...input.entries()].forEach(([toPointString, toChar]) => {
-      if (toChar !== ".") return
-      const fromPoint = Point2D.fromString(fromPointString)
-      const toPoint = Point2D.fromString(toPointString)
-      const manhattanDistance = fromPoint.manhattan(toPoint)
-      if (manhattanDistance > cheatDistance) return
-      const pathDistance = forwardDistances[locationToKey(fromPointString, 0)].distance + backwardDistancesNoCheats[locationToKey(toPointString, 0)].distance + manhattanDistance
-      if (pathDistance < shortestNoCheating) {
-        const saved = shortestNoCheating - pathDistance
-        if (saved >= 100) {
-          if (count % 100 === 0) console.log(count)
-          count++
-        }
+    const fromPoint = Point2D.fromString(fromPointString);
+    // Iterate over every point within manhattan distance of cheatDistance
+    for (let dr = -cheatDistance; dr <= cheatDistance; dr++) {
+      const distanceRemaining = cheatDistance - Math.abs(dr)
+      for (let dc = -distanceRemaining; dc <= distanceRemaining; dc++) {
+        const toPoint = fromPoint.add(new Point2D(dr, dc))
+        const toPointString = toPoint.toString()
+        const toChar = input.get(toPointString)
+        if (toChar !== ".") continue
+        const pathDistance = forwardDistances[fromPointString].distance + backwardDistances[toPointString].distance + Math.abs(dr) + Math.abs(dc)
+        if (shortestDistance - pathDistance >= 100) count++
       }
-    })
+    }
   })
   return count
 }

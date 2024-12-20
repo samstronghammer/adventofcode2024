@@ -9,7 +9,6 @@ const alg = graphlib.alg
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const time = Date.now()
 const input = InputUtils.toPoint2DMap(__dirname)
 const startPointString = [...input.entries()].find(([_, value]) => value === "S")[0]
 const endPointString = [...input.entries()].find(([_, value]) => value === "E")[0]
@@ -71,5 +70,3 @@ console.log(count)
 
 const count2 = countSavings(20)
 console.log(count2)
-
-console.log(Date.now() - time)
